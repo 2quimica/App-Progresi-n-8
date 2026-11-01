@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Progresión 8: Conservación y Transferencia de Energía en Campos y Sistemas</title>
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-card: #131b2e;
+      --bg-card-hover: #1c2742;
+      --border-color: #263554;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #06b6d4;
+      --accent-cyan-glow: rgba(6, 182, 212, 0.25);
+      --accent-purple: #8b5cf6;
+      --accent-purple-glow: rgba(139, 92, 246, 0.25);
+      --accent-amber: #f59e0b;
+      --accent-amber-glow: rgba(245, 158, 11, 0.2);
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.15);
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.15);
+      --font-stack: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-stack);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px;
+      overflow-x: hidden;
+    }
+
+    #app-container {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Fixed Top Navigation Bar */
+    .top-bar {
+      position: sticky;
+      top: 8px;
+      z-index: 100;
+      background: rgba(19, 27, 46, 0.95);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+
+    .top-bar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .user-tag {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 220px;
+    }
+
+    .phase-badge {
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .progress-bar-track {
+      width: 100%;
+      height: 8px;
+      background-color: #0b111e;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      transition: width 0.4s ease;
+    }
+
+    /* Standard Cards */
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card-header-badge {
+      align-self: flex-start;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid var(--accent-cyan-glow);
+    }
+
+    h1 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      line-height: 1.25;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    strong {
+      color: var(--text-main);
+    }
+
+    /* Teacher Pause Box */
+    .teacher-pause-card {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(139, 92, 246, 0.12));
+      border: 2px dashed var(--accent-amber);
+      border-radius: 16px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .teacher-pause-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--accent-amber);
+    }
+
+    /* Form Inputs & Buttons */
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: left;
+    }
+
+    .input-group label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .input-control {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border-color);
+      background-color: #0b101d;
+      color: var(--text-main);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-control:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 3px var(--accent-cyan-glow);
+    }
+
+    .btn {
+      width: 100%;
+      min-height: 50px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: none;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      user-select: none;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
+      color: #ffffff;
+      box-shadow: 0 4px 14px var(--accent-cyan-glow);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background-color: #18233c;
+      color: var(--text-main);
+      border: 1.5px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--bg-card-hover);
+      border-color: var(--accent-cyan);
+    }
+
+    .btn-secondary.selected {
+      border-color: var(--accent-cyan);
+      background-color: rgba(6, 182, 212, 0.15);
+      color: #fff;
+    }
+
+    .btn-amber {
+      background: linear-gradient(135deg, var(--accent-amber), #d97706);
+      color: #ffffff;
+      box-shadow: 0 4px 14px var(--accent-amber-glow);
+    }
+
+    .btn-disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* Interactive Simulations Layout */
+    .sim-container {
+      background-color: #0b101d;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sim-canvas-box {
+      width: 100%;
+      min-height: 200px;
+      background-color: #060911;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 480px) {
+      .controls-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .slider-control {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: #131a2a;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .slider-control label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      color: var(--accent-cyan);
+    }
+
+    .slider-control input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent-cyan);
+      cursor: pointer;
+    }
+
+    .value-display {
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    /* Options & Quiz Buttons */
+    .options-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border-color);
+      background-color: #0b101d;
+      color: var(--text-main);
+      font-size: 0.92rem;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.15s ease;
+    }
+
+    .option-btn:hover:not(.btn-disabled) {
+      border-color: var(--accent-cyan);
+      background-color: var(--bg-card-hover);
+    }
+
+    .option-btn.selected {
+      border-color: var(--accent-cyan);
+      background-color: rgba(6, 182, 212, 0.12);
+    }
+
+    .option-letter {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background-color: var(--border-color);
+      color: var(--text-main);
+      font-weight: 800;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .feedback-box {
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.9rem;
+    }
+
+    .feedback-correct {
+      background-color: var(--success-bg);
+      border: 1.5px solid var(--success);
+      color: #6ee7b7;
+    }
+
+    .feedback-incorrect {
+      background-color: var(--danger-bg);
+      border: 1.5px solid var(--danger);
+      color: #fca5a5;
+    }
+
+    /* Concept Map Touch Interactive */
+    .map-nodes-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 480px) {
+      .map-nodes-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .map-node {
+      background-color: #0b101d;
+      border: 1.5px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .map-node-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .map-slot {
+      min-height: 42px;
+      border: 1.5px dashed var(--accent-cyan);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--accent-cyan);
+      cursor: pointer;
+      background-color: rgba(6, 182, 212, 0.04);
+      padding: 6px 10px;
+      text-align: center;
+    }
+
+    .map-slot.filled {
+      border-style: solid;
+      background-color: #1e2c4a;
+      color: #fff;
+    }
+
+    /* Quiz Navigator Grid */
+    .quiz-nav-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 6px;
+      margin: 8px 0;
+    }
+
+    .quiz-nav-btn {
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background-color: #0b101d;
+      color: var(--text-muted);
+      font-weight: 800;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quiz-nav-btn.active {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      box-shadow: 0 0 0 2px var(--accent-cyan-glow);
+    }
+
+    .quiz-nav-btn.answered {
+      background-color: #1e2c4a;
+      color: #fff;
+      border-color: var(--accent-purple);
+    }
+
+    /* Evidence Screenshot Card */
+    .evidence-card {
+      background: linear-gradient(180deg, #131b2e 0%, #080d1a 100%);
+      border: 2px solid var(--accent-cyan);
+      border-radius: 20px;
+      padding: 24px 20px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(6, 182, 212, 0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .score-large {
+      font-size: 3.5rem;
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .badge-perf {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      align-self: center;
+    }
+
+    .badge-exc { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; }
+    .badge-good { background: rgba(6, 182, 212, 0.2); color: #38bdf8; border: 1px solid #06b6d4; }
+    .badge-proc { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #f59e0b; }
+    .badge-reinf { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
+
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      text-align: left;
+    }
+
+    .summary-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .summary-table td:nth-child(2) {
+      text-align: right;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .camera-notice {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(239, 68, 68, 0.2));
+      border: 1.5px dashed var(--accent-amber);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #fef08a;
+    }
+
+    /* Flashcard Stack */
+    .flashcard {
+      background: #0b101d;
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--accent-cyan);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .flashcard-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app-container">
+    <!-- Top Progress Bar (Visible after Start) -->
+    <div id="top-bar" class="top-bar" style="display: none;">
+      <div class="top-bar-header">
+        <span id="user-display-tag" class="user-tag">Estudiante</span>
+        <span id="phase-display-badge" class="phase-badge">FASE 1 DE 5</span>
+      </div>
+      <div class="progress-bar-track">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+      </div>
+    </div>
+
+    <!-- Main Dynamic Content Container -->
+    <main id="app-content"></main>
+  </div>
+
+  <script>
+    // --- GLOBAL QUIZ BANK FOR PROGRESIÓN 8 (10 QUESTIONS) ---
+    const QUIZ_BANK = [
+      {
+        id: 1,
+        topic: "conservacion",
+        question: "¿Qué establece el principio fundamental de Conservación de la Energía en los procesos de la física?",
+        options: [
+          "Que la energía se destruye gradualmente a medida que un objeto disminuye su velocidad.",
+          "Que la energía no se crea ni se destruye; únicamente se transfiere o transforma entre objetos, campos y sistemas.",
+          "Que la energía solo existe cuando hay materia sólida en contacto físico directo.",
+          "Que la cantidad total de energía de un sistema abierto siempre aumenta de forma espontánea."
+        ],
+        correct: 1,
+        explanation: "La ley universal de conservación establece que la energía total permanece constante: solo se transfiere entre objetos, campos de fuerza o componentes de un sistema."
+      },
+      {
+        id: 2,
+        topic: "campos_energia",
+        question: "¿Dónde se almacena la energía potencial en un sistema interactuante sin contacto como un capacitor o un imán?",
+        options: [
+          "Exclusivamente en los átomos internos de la batería exterior.",
+          "En la masa inerte del aire que rodea a los cables.",
+          "En el propio campo de fuerza (eléctrico o magnético) presente en la región del espacio entre los objetos.",
+          "La energía desaparece momentáneamente hasta que los objetos se tocan."
+        ],
+        correct: 2,
+        explanation: "Los campos eléctricos y magnéticos no son meras construcciones abstractas: albergan y transmiten energía real en el espacio que rodea a las cargas o fuentes magnéticas."
+      },
+      {
+        id: 3,
+        topic: "lineas_densidad",
+        question: "En una representación con líneas de campo, ¿qué información proporciona la DENSIDAD de las líneas (qué tan juntas están)?",
+        options: [
+          "A mayor densidad de líneas, el campo es más intenso y mayor es la energía almacenada en esa región.",
+          "La densidad indica la velocidad a la que viajan las partículas de masa alrededor del objeto.",
+          "A mayor densidad de líneas, el campo es más débil y almacena menos energía.",
+          "Indica que las líneas son hilos materiales sólidos que tiran del objeto de prueba."
+        ],
+        correct: 0,
+        explanation: "En los modelos de campos, la mayor concentración o densidad de líneas por unidad de área representa un campo de mayor magnitud/intensidad y una mayor densidad de energía almacenada."
+      },
+      {
+        id: 4,
+        topic: "relacion_fuerza",
+        question: "¿Cuál es la relación entre la magnitud del campo en un punto y la fuerza ejercida sobre una carga o masa de prueba?",
+        options: [
+          "No existe ninguna relación; la fuerza es totalmente independiente del campo.",
+          "Donde el campo es más intenso, el objeto de prueba experimentará una fuerza mayor y seguirá la trayectoria marcada por las líneas.",
+          "La fuerza es inversamente proporcional al cuadrado del número de partículas neutrales.",
+          "La fuerza solo aparece si el campo eléctrico y el magnético tienen la misma frecuencia en Hz."
+        ],
+        correct: 1,
+        explanation: "El campo cuantifica la capacidad del espacio para ejercer fuerza sobre un objeto de prueba ($F = qE$). A mayor intensidad de campo, mayor es la fuerza resultante."
+      },
+      {
+        id: 5,
+        topic: "dispositivos",
+        question: "¿En qué región de un solenoide (bobina de alambre con corriente) o de un capacitor de placas paralelas la energía almacenada es mayor?",
+        options: [
+          "En el exterior muy lejano, donde las líneas de campo se dispersan.",
+          "En el interior de la bobina o entre las placas del capacitor, donde las líneas de campo son más compactas y densas.",
+          "Únicamente en el interruptor de plástico cuando está apagado.",
+          "En los cables de conexión neutros no conductores."
+        ],
+        correct: 1,
+        explanation: "Tanto en el interior de un solenoide como entre las placas paralelas de un capacitor, las líneas de campo se concentran de forma muy uniforme y densa, indicando la máxima acumulación de energía."
+      },
+      {
+        id: 6,
+        topic: "diferencias_campos",
+        question: "¿Cuál es una diferencia fundamental entre las fuentes del campo eléctrico y del campo magnético?",
+        options: [
+          "Existen cargas eléctricas individuales (monopolos +, -), mientras que los polos magnéticos siempre existen en pares (dipolos N-S).",
+          "El campo eléctrico no ejerce fuerzas a distancia, mientras que el magnético sí.",
+          "El campo magnético no almacena energía, mientras que el eléctrico sí.",
+          "Las líneas de campo eléctrico forman siempre bucles cerrados y las magnéticas parten del infinito."
+        ],
+        correct: 0,
+        explanation: "Podemos aislar una carga positiva o negativa individual (monopolo eléctrico), pero si cortamos un imán por la mitad, obtenemos dos nuevos imanes con polos Norte y Sur (dipolos)."
+      },
+      {
+        id: 7,
+        topic: "transferencia_sistemas",
+        question: "Cuando un motor eléctrico funciona, ¿cómo ocurre la transferencia de energía entre campos y objetos?",
+        options: [
+          "La energía eléctrica almacenada en la fuente genera un campo magnético que interactúa ejerciendo fuerzas mecánicas para rotar el eje del motor.",
+          "La energía del motor se crea espontáneamente sin consumir energía eléctrica.",
+          "Los electrones se transforman en calor hasta desaparecer totalmente del circuito.",
+          "La gravedad destruye el campo eléctrico de las bobinas de cobre."
+        ],
+        correct: 0,
+        explanation: "Un motor eléctrico convierte la energía de la corriente en campos magnéticos cambiantes, los cuales ejercen fuerzas sobre el rotor transformando la energía de campo en energía cinética mecánica."
+      },
+      {
+        id: 8,
+        topic: "naturaleza_lineas",
+        question: "¿Cómo deben entenderse científicamente las 'líneas de campo' utilizadas en física?",
+        options: [
+          "Son cables de cobre microscópicos que se extienden físicamente por el espacio.",
+          "Son representaciones visuales y modelos conceptuales para interpretar la dirección, sentido e intensidad del campo.",
+          "Son rayos de luz visible emitidos por cargas neutras.",
+          "Son cadenas de átomos de hierro que flotan en el vacío de forma permanente."
+        ],
+        correct: 1,
+        explanation: "Las líneas de campo son modelos pictóricos e instrumentos conceptuales creados por científicos como Michael Faraday para visualizar e interpretar los campos de fuerza invisibles."
+      },
+      {
+        id: 9,
+        topic: "wimshurst_experimento",
+        question: "En la experiencia con la máquina de Wimshurst y aceite con fibra de algodón, ¿qué provocó que las fibras se alinearan formando patrones?",
+        options: [
+          "El calor del aire hirviendo la mezcla de aceite.",
+          "La presencia de campos magnéticos permanentes en las partículas de plástico.",
+          "El campo eléctrico generado por los conductores cargados orientó y alineó las partículas a lo largo de las líneas de campo.",
+          "La gravedad terrestre empujó las fibras hacia los bordes del frasco."
+        ],
+        correct: 2,
+        explanation: "Al cargarse los conductores con la máquina de Wimshurst, el intenso campo eléctrico en la mezcla líquida polariza y alinea la fibra de algodón revelando empíricamente la forma de las líneas de campo."
+      },
+      {
+        id: 10,
+        topic: "modelos_relatividad",
+        question: "En la extensión sobre la evolución de los modelos científicos (Gravity Probe B), ¿qué se buscó verificar experimentalmente sobre el espacio-tiempo?",
+        options: [
+          "Que el Sol gira alrededor de la Tierra en una órbita circular perfecta.",
+          "Que la masa y la energía de la Tierra producen una pequeña curvatura y torcedura (vórtice) en el tejido del espacio-tiempo, como predijo Einstein.",
+          "Que los giroscopios de cuarzo giran infinitamente rápido sin batería.",
+          "Que las leyes de Newton son completamente falsas en todas las situaciones cotidianas."
+        ],
+        correct: 1,
+        explanation: "La misión Gravity Probe B de la NASA verificó con ultra-precisión las predicciones de la Relatividad General de Einstein: la masa y el giro terrestre deforman y tuercen levemente el espacio-tiempo a su alrededor."
+      }
+    ];
+
+    // --- APPLICATION STATE (SINGLE SOURCE OF TRUTH) ---
+    let state = {
+      user: { name: '', group: '' },
+      phase: 0, // 0: Start, 1: Engage, 2: Explore, 3: Explain, 4: Elaborate, 5: Evaluate
+      screen: 'START',
+      engage: { prediction: null },
+      explore: {
+        configE: 'plates', // 'pos', 'neg', 'dipole', 'same', 'plates', 'sphere_plane'
+        configM: 'bar', // 'bar', 'attract', 'repel', 'solenoid'
+        intensity: 3, // 1 to 5
+        densityChoice: null
+      },
+      explain: {
+        readingsDone: [false, false, false, false],
+        check1: null,
+        check2: null
+      },
+      elaborate: {
+        patternQuiz: null,
+        errorDetection: [null, null, null, null, null],
+        conceptMap: {
+          slots: { slot1: null, slot2: null, slot3: null, slot4: null, slot5: null },
+          checked: false
+        },
+        extensionChoice: null
+      },
+      evaluate: {
+        currentQ: 0,
+        answers: new Array(10).fill(null),
+        submitted: false,
+        reflection: ''
+      }
+    };
+
+    const STORAGE_KEY = 'PROG8_ENERGY_FIELDS_STATE_V1';
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        console.warn("Storage error", e);
+      }
+    }
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.user && parsed.user.name) {
+            state = parsed;
+            return true;
+          }
+        }
+      } catch (e) {
+        console.warn("Error loading state", e);
+      }
+      return false;
+    }
+
+    // --- MAIN RENDER CONTROLLER ---
+    function renderApp() {
+      const container = document.getElementById('app-content');
+      const topBar = document.getElementById('top-bar');
+      const userTag = document.getElementById('user-display-tag');
+      const phaseBadge = document.getElementById('phase-display-badge');
+      const progressFill = document.getElementById('progress-bar-fill');
+
+      if (!container) return;
+
+      // Update Top Bar
+      if (state.screen === 'START') {
+        topBar.style.display = 'none';
+      } else {
+        topBar.style.display = 'flex';
+        userTag.textContent = `${state.user.name} (${state.user.group})`;
+        phaseBadge.textContent = `FASE ${state.phase} DE 5`;
+        const percent = Math.min(100, Math.max(5, (state.phase / 5) * 100));
+        progressFill.style.width = `${percent}%`;
+      }
+
+      // Route views
+      switch (state.screen) {
+        case 'START': renderStartScreen(container); break;
+        case 'ENGAGE': renderEngageScreen(container); break;
+        case 'EXPLORE': renderExploreScreen(container); break;
+        case 'EXPLAIN': renderExplainScreen(container); break;
+        case 'ELABORATE': renderElaborateScreen(container); break;
+        case 'EVALUATE': renderEvaluateScreen(container); break;
+        case 'EVIDENCE': renderEvidenceScreen(container); break;
+        default: renderStartScreen(container);
+      }
+    }
+
+    // --- SCREEN 0: REGISTRATION / START ---
+    function renderStartScreen(container) {
+      container.innerHTML = `
+        <div class="card" style="text-align: center;">
+          <span class="card-header-badge" style="align-self: center;">LA ENERGÍA EN LOS PROCESOS DE LA VIDA DIARIA</span>
+          <h1 style="margin-top: 4px;">PROGRESIÓN 8</h1>
+          <h2 style="font-size: 1.1rem; color: #f8fafc; font-weight: 800;">CONSERVACIÓN Y TRANSFERENCIA DE ENERGÍA EN CAMPOS Y SISTEMAS</h2>
+          
+          <div style="background: #0b101d; border-left: 4px solid var(--accent-cyan); padding: 12px; text-align: left; border-radius: 8px;">
+            <p style="font-size: 0.9rem; color: #38bdf8; font-weight: 700; margin-bottom: 2px;">💡 IDEA CENTRAL:</p>
+            <p style="font-size: 0.88rem; color: var(--text-main);">
+              "La energía no se crea ni se destruye; solo se mueve y transfiere entre un lugar y otro, así como entre objetos y/o campos, o entre sistemas."
+            </p>
+          </div>
+
+          <form id="start-form" onsubmit="handleStartSubmit(event)" style="margin-top: 8px; display: flex; flex-direction: column; gap: 14px;">
+            <div class="input-group">
+              <label for="user-name">Nombre Completo del Estudiante *</label>
+              <input type="text" id="user-name" class="input-control" placeholder="Ej. Sofia Montserrat Ruiz" required value="${state.user.name}">
+            </div>
+
+            <div class="input-group">
+              <label for="user-group">Grupo *</label>
+              <input type="text" id="user-group" class="input-control" placeholder="Ej. 403-B" required value="${state.user.group}">
+            </div>
+
+            <div style="background: #0b101d; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; text-align: left; font-size: 0.85rem; color: var(--text-muted);">
+              <p style="color: var(--accent-cyan); font-weight: 700; margin-bottom: 4px;">📌 Plan de Trabajo en Clase (50 min):</p>
+              <ul style="padding-left: 16px; display: flex; flex-direction: column; gap: 4px;">
+                <li><strong>1. Enganchar (5 min):</strong> ¿Dónde está la energía si no hay contacto?</li>
+                <li><strong>2. Explorar (10 min):</strong> Laboratorio interactivo de líneas de campo y densidad.</li>
+                <li><strong>3. Explicar (12 min):</strong> Conservación, campos E vs M, capacitores y solenoides.</li>
+                <li><strong>4. Elaborar (13 min):</strong> Mapa conceptual, detector de errores y evolución de modelos.</li>
+                <li><strong>5. Evaluar (10 min):</strong> Cuestionario final de 10 reactivos y reporte de evidencia.</li>
+              </ul>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="margin-top: 6px;">
+              🚀 COMENZAR MI RECORRIDO
+            </button>
+          </form>
+        </div>
+      `;
+    }
+
+    function handleStartSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('user-name').value.trim();
+      const group = document.getElementById('user-group').value.trim();
+      if (!name || !group) return;
+
+      state.user.name = name;
+      state.user.group = group;
+      state.phase = 1;
+      state.screen = 'ENGAGE';
+      saveState();
+      renderApp();
+    }
+
+    // --- SCREEN 1: ENGAGE (5E - FASE 1) ---
+    function renderEngageScreen(container) {
+      container.innerHTML = `
+        <div class="card">
+          <span class="card-header-badge">FASE 1: ENGANCHAR (ENGAGE)</span>
+          <h1>1. ¿Dónde se almacena la energía?</h1>
+          <p>Imagina dos placas metálicas separadas por aire en un capacitor, o dos imanes potentes aproximándose sin tocarse. En ambos casos no hay contacto físico inmediato, pero <strong>existe energía acumulada</strong> lista para actuar.</p>
+
+          <!-- SVG Visual Inquiry Diagram -->
+          <div style="background: #060911; border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; text-align: center;">
+            <span style="font-size: 0.8rem; font-weight: 800; color: var(--accent-cyan);">SISTEMA A DISTANCIA: PLACAS CARGADAS (CAPACITOR)</span>
+            <svg viewBox="0 0 320 120" style="width: 100%; max-height: 130px; margin-top: 8px;">
+              <!-- Left Plate (+) -->
+              <rect x="40" y="20" width="16" height="80" rx="4" fill="#ef4444" stroke="#f87171" stroke-width="2"/>
+              <text x="48" y="65" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle">+</text>
+              <!-- Right Plate (-) -->
+              <rect x="264" y="20" width="16" height="80" rx="4" fill="#3b82f6" stroke="#60a5fa" stroke-width="2"/>
+              <text x="272" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">-</text>
+              
+              <!-- Electric Field Lines -->
+              <line x1="56" y1="35" x2="264" y2="35" stroke="#06b6d4" stroke-width="2" stroke-dasharray="6,4"/>
+              <polygon points="165,35 155,30 155,40" fill="#06b6d4"/>
+              
+              <line x1="56" y1="60" x2="264" y2="60" stroke="#06b6d4" stroke-width="2" stroke-dasharray="6,4"/>
+              <polygon points="165,60 155,55 155,65" fill="#06b6d4"/>
+              
+              <line x1="56" y1="85" x2="264" y2="85" stroke="#06b6d4" stroke-width="2" stroke-dasharray="6,4"/>
+              <polygon points="165,85 155,80 155,90" fill="#06b6d4"/>
+
+              <!-- Energy glow in field -->
+              <rect x="75" y="25" width="170" height="70" fill="rgba(6, 182, 212, 0.08)" rx="8" stroke="rgba(6, 182, 212, 0.2)" stroke-dasharray="2,2"/>
+              <text x="160" y="64" fill="#f59e0b" font-size="10" font-weight="bold" text-anchor="middle">¿Energía guardada en el ESPACIO?</text>
+            </svg>
+          </div>
+
+          <!-- Inquiry Questions -->
+          <div style="background: #0b101d; padding: 14px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 10px;">
+            <p style="font-weight: 700; color: var(--text-main);">🤔 Indagación inicial:</p>
+            <p style="font-size: 0.88rem;">Si dos objetos no están tocándose, ¿dónde reside exactamente la energía antes de convertirse en movimiento o calor?</p>
+
+            <div class="options-stack">
+              <button class="option-btn ${state.engage.prediction === 0 ? 'selected' : ''}" onclick="selectEngagePred(0)">
+                <span class="option-letter">A</span>
+                <span>La energía se almacena en el CAMPO (eléctrico o magnético) que llena la región del espacio entre ellos.</span>
+              </button>
+              <button class="option-btn ${state.engage.prediction === 1 ? 'selected' : ''}" onclick="selectEngagePred(1)">
+                <span class="option-letter">B</span>
+                <span>La energía no existe en el espacio; solo aparece mágicamente cuando se tocan los objetos.</span>
+              </button>
+            </div>
+            ${state.engage.prediction === 0 ? `<div class="feedback-box feedback-correct">✅ ¡Exacto! Los campos de fuerza son entes físicos reales capaces de almacenar y transmitir energía.</div>` : ''}
+          </div>
+
+          <!-- Connection to Progresión 7 -->
+          <div style="background: #0b101d; padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-muted);">
+            <span style="font-weight: 800; color: var(--accent-cyan); text-transform: uppercase;">🔗 Conexión con Progresión 7:</span>
+            <p style="margin-top: 4px;">En la progresión anterior aprendiste que existen <em>fuerzas a distancia</em> (gravitacional y de Coulomb). En esta <strong>Progresión 8</strong> daremos el paso fundamental: comprender que las fuerzas ocurren porque existe un <strong>CAMPO DE FUERZA</strong> y que dicho campo <strong>CONTIENE ENERGÍA</strong>.</p>
+          </div>
+
+          <button class="btn btn-primary" onclick="goToPhase(2, 'EXPLORE')">
+            CONTINUAR A LA FASE 2: EXPLORAR ➡️
+          </button>
+        </div>
+      `;
+    }
+
+    function selectEngagePred(val) {
+      state.engage.prediction = val;
+      saveState();
+      renderApp();
+    }
+
+    // --- SCREEN 2: EXPLORE (5E - FASE 2) ---
+    function renderExploreScreen(container) {
+      container.innerHTML = `
+        <div class="card">
+          <span class="card-header-badge">FASE 2: EXPLORAR (EXPLORE)</span>
+          <h1>2. Laboratorio Interactivo de Líneas de Campo</h1>
+          <p>Selecciona diferentes arreglos conductores y magnéticos para analizar el patrón de las líneas de campo, su dirección y su <strong>densidad</strong>.</p>
+
+          <!-- Interactive Field Selector & Canvas -->
+          <div class="sim-container">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <span style="font-size: 0.8rem; font-weight: 800; color: var(--accent-cyan); text-transform: uppercase;">⚡ CONFIGURACIÓN DE CAMPO ELÉCTRICO:</span>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                <button class="btn btn-secondary ${state.explore.configE === 'plates' ? 'selected' : ''}" style="flex: 1; min-width: 130px; font-size: 0.82rem; padding: 8px;" onclick="setFieldConfig('configE', 'plates')">Placas Paralelas</button>
+                <button class="btn btn-secondary ${state.explore.configE === 'dipole' ? 'selected' : ''}" style="flex: 1; min-width: 130px; font-size: 0.82rem; padding: 8px;" onclick="setFieldConfig('configE', 'dipole')">Cargas Opuestas (+ -)</button>
+                <button class="btn btn-secondary ${state.explore.configE === 'same' ? 'selected' : ''}" style="flex: 1; min-width: 130px; font-size: 0.82rem; padding: 8px;" onclick="setFieldConfig('configE', 'same')">Cargas Iguales (+ +)</button>
+                <button class="btn btn-secondary ${state.explore.configE === 'sphere_plane' ? 'selected' : ''}" style="flex: 1; min-width: 130px; font-size: 0.82rem; padding: 8px;" onclick="setFieldConfig('configE', 'sphere_plane')">Esfera y Plano</button>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <span style="font-size: 0.8rem; font-weight: 800; color: var(--accent-purple); text-transform: uppercase;">🧲 CONFIGURACIÓN DE CAMPO MAGNÉTICO:</span>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                <button class="btn btn-secondary ${state.explore.configE === 'mag_bar' ? 'selected' : ''}" style="flex: 1; min-width: 130px; font-size: 0.82rem; padding: 8px;" onclick="setFieldConfig('configE', 'mag_bar')">Imán de Barra (N-S)</button>
+                <button class="btn btn-secondary ${state.explore.configE === 'solenoid' ? 'selected' : ''}" style="flex: 1; min-width: 130px; font-size: 0.82rem; padding: 8px;" onclick="setFieldConfig('configE', 'solenoid')">Solenoide / Bobina</button>
+              </div>
+            </div>
+
+            <!-- SVG Visual Renderer -->
+            <div class="sim-canvas-box">
+              ${renderSVGFieldDiagram(state.explore.configE, state.explore.intensity)}
+            </div>
+
+            <!-- Intensity & Density Slider Control -->
+            <div class="slider-control">
+              <label>Intensidad de la Fuente / Carga: <span class="value-display">Nivel ${state.explore.intensity}</span></label>
+              <input type="range" min="1" max="5" value="${state.explore.intensity}" oninput="updateIntensity(this.value)">
+            </div>
+          </div>
+
+          <!-- Density & Energy Inquiry -->
+          <div style="background: #0b101d; padding: 14px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 10px;">
+            <p style="font-weight: 700; color: var(--accent-cyan);">🔎 Descubrimiento de Patrón: DENSIDAD DE LÍNEAS DE CAMPO</p>
+            <p style="font-size: 0.88rem;">Observa las regiones donde las líneas aparecen más compactas (juntas) en comparación con las zonas donde están separadas:</p>
+            
+            <div class="options-stack">
+              <button class="option-btn ${state.explore.densityChoice === 0 ? 'selected' : ''}" onclick="setDensityChoice(0)">
+                <span class="option-letter">A</span>
+                <span>Mayor densidad de líneas $\\rightarrow$ Campo más Intenso $\\rightarrow$ MAYOR ENERGÍA almacenada en esa región.</span>
+              </button>
+              <button class="option-btn ${state.explore.densityChoice === 1 ? 'selected' : ''}" onclick="setDensityChoice(1)">
+                <span class="option-letter">B</span>
+                <span>Mayor densidad de líneas $\\rightarrow$ Campo más débil $\\rightarrow$ Menor energía.</span>
+              </button>
+            </div>
+            ${state.explore.densityChoice === 0 ? `<div class="feedback-box feedback-correct">✅ ¡Correcto! La densidad de líneas por unidad de área refleja la intensidad del campo y la cantidad de energía contenida.</div>` : ''}
+          </div>
+
+          <!-- TEACHER PAUSE 1 -->
+          <div class="teacher-pause-card">
+            <div class="teacher-pause-title">
+              <span>🧑‍🏫 PAUSA CON TU PROFESOR</span>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-main);">
+              "Observa las líneas de campo representadas. ¿Qué información conceptual podemos interpretar a partir de: (1) su dirección con flechas, (2) su forma curva o recta, y (3) su separación o densidad?"
+            </p>
+            <button class="btn btn-amber" onclick="confirmTeacherPause(1)">
+              YA LO COMENTAMOS EN CLASE — CONTINUAR
+            </button>
+          </div>
+
+          <button class="btn btn-primary" onclick="goToPhase(3, 'EXPLAIN')">
+            CONTINUAR A LA FASE 3: EXPLICAR ➡️
+          </button>
+        </div>
+      `;
+    }
+
+    function setFieldConfig(key, val) {
+      state.explore[key] = val;
+      saveState();
+      renderApp();
+    }
+
+    function updateIntensity(val) {
+      state.explore.intensity = parseInt(val);
+      saveState();
+      renderApp();
+    }
+
+    function setDensityChoice(val) {
+      state.explore.densityChoice = val;
+      saveState();
+      renderApp();
+    }
+
+    function confirmTeacherPause(num) {
+      alert(`✅ Pausa Docente #${num} registrada. Continúa con tu grupo.`);
+    }
+
+    // Dynamic SVG Field Rendering
+    function renderSVGFieldDiagram(type, lvl) {
+      const lineCount = lvl * 3;
+      
+      if (type === 'plates') {
+        // Parallel plates capacitor
+        let lines = '';
+        const step = 70 / Math.max(2, lineCount);
+        for (let y = 25; y <= 95; y += step) {
+          lines += `<line x1="60" y1="${y}" x2="260" y2="${y}" stroke="#06b6d4" stroke-width="2"/>`;
+          lines += `<polygon points="160,${y} 150,${y-4} 150,${y+4}" fill="#06b6d4"/>`;
+        }
+        return `
+          <svg viewBox="0 0 320 130" style="width: 100%; height: 100%;">
+            <!-- Positive Plate -->
+            <rect x="45" y="15" width="15" height="95" rx="3" fill="#ef4444"/>
+            <text x="52" y="65" fill="#fff" font-size="12" font-weight="bold" text-anchor="middle">+</text>
+            <!-- Negative Plate -->
+            <rect x="260" y="15" width="15" height="95" rx="3" fill="#3b82f6"/>
+            <text x="267" y="65" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle">-</text>
+            <!-- Uniform Field Lines -->
+            ${lines}
+            <text x="160" y="118" fill="#38bdf8" font-size="9" font-weight="bold" text-anchor="middle">Campo uniforme entre placas (Alta Densidad)</text>
+          </svg>
+        `;
+      } else if (type === 'dipole') {
+        // Opposite charges (+ and -)
+        return `
+          <svg viewBox="0 0 320 130" style="width: 100%; height: 100%;">
+            <!-- Lines -->
+            <path d="M 80 65 L 240 65" stroke="#06b6d4" stroke-width="2"/>
+            <path d="M 80 65 Q 160 20 240 65" fill="none" stroke="#06b6d4" stroke-width="2"/>
+            <path d="M 80 65 Q 160 110 240 65" fill="none" stroke="#06b6d4" stroke-width="2"/>
+            <path d="M 80 65 Q 160 -10 240 65" fill="none" stroke="#06b6d4" stroke-width="1.5"/>
+            <path d="M 80 65 Q 160 140 240 65" fill="none" stroke="#06b6d4" stroke-width="1.5"/>
+            <!-- Positive Charge -->
+            <circle cx="80" cy="65" r="18" fill="#ef4444" stroke="#f87171" stroke-width="2"/>
+            <text x="80" y="70" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">+</text>
+            <!-- Negative Charge -->
+            <circle cx="240" cy="65" r="18" fill="#3b82f6" stroke="#60a5fa" stroke-width="2"/>
+            <text x="240" y="71" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">-</text>
+            <text x="160" y="122" fill="#38bdf8" font-size="9" font-weight="bold" text-anchor="middle">Dipolo Eléctrico: Las líneas parten de + y entran a -</text>
+          </svg>
+        `;
+      } else if (type === 'same') {
+        // Same charges (+ and +)
+        return `
+          <svg viewBox="0 0 320 130" style="width: 100%; height: 100%;">
+            <path d="M 80 65 Q 140 65 140 10" fill="none" stroke="#ef4444" stroke-width="2"/>
+            <path d="M 80 65 Q 140 65 140 120" fill="none" stroke="#ef4444" stroke-width="2"/>
+            <path d="M 240 65 Q 180 65 180 10" fill="none" stroke="#ef4444" stroke-width="2"/>
+            <path d="M 240 65 Q 180 65 180 120" fill="none" stroke="#ef4444" stroke-width="2"/>
+            <!-- Charges -->
+            <circle cx="80" cy="65" r="18" fill="#ef4444"/>
+            <text x="80" y="70" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">+</text>
+            <circle cx="240" cy="65" r="18" fill="#ef4444"/>
+            <text x="240" y="70" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">+</text>
+            <text x="160" y="122" fill="#fca5a5" font-size="9" font-weight="bold" text-anchor="middle">Repulsión: Las líneas se repelen (Campo nulo al centro)</text>
+          </svg>
+        `;
+      } else if (type === 'sphere_plane') {
+        return `
+          <svg viewBox="0 0 320 130" style="width: 100%; height: 100%;">
+            <rect x="250" y="15" width="12" height="95" fill="#3b82f6" rx="2"/>
+            <circle cx="70" cy="65" r="22" fill="#ef4444"/>
+            <text x="70" y="70" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">+</text>
+            <!-- Curved field lines to plane -->
+            <path d="M 92 65 L 250 65" stroke="#06b6d4" stroke-width="2"/>
+            <path d="M 90 50 Q 170 25 250 35" fill="none" stroke="#06b6d4" stroke-width="2"/>
+            <path d="M 90 80 Q 170 105 250 95" fill="none" stroke="#06b6d4" stroke-width="2"/>
+            <text x="160" y="122" fill="#38bdf8" font-size="9" font-weight="bold" text-anchor="middle">Esfera Cargada y Lámina Plana Conductora</text>
+          </svg>
+        `;
+      } else if (type === 'mag_bar') {
+        return `
+          <svg viewBox="0 0 320 130" style="width: 100%; height: 100%;">
+            <!-- Magnet Body -->
+            <rect x="110" y="45" width="50" height="35" fill="#ef4444"/>
+            <text x="135" y="67" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle">N</text>
+            <rect x="160" y="45" width="50" height="35" fill="#3b82f6"/>
+            <text x="185" y="67" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle">S</text>
+            <!-- Magnetic Loops -->
+            <path d="M 125 45 Q 160 10 195 45" fill="none" stroke="#8b5cf6" stroke-width="2"/>
+            <path d="M 125 80 Q 160 115 195 80" fill="none" stroke="#8b5cf6" stroke-width="2"/>
+            <path d="M 115 45 Q 160 -15 205 45" fill="none" stroke="#8b5cf6" stroke-width="1.5"/>
+            <path d="M 115 80 Q 160 140 205 80" fill="none" stroke="#8b5cf6" stroke-width="1.5"/>
+            <text x="160" y="122" fill="#c084fc" font-size="9" font-weight="bold" text-anchor="middle">Campo Magnético: Líneas salen de Norte y entran a Sur</text>
+          </svg>
+        `;
+      } else if (type === 'solenoid') {
+        return `
+          <svg viewBox="0 0 320 130" style="width: 100%; height: 100%;">
+            <!-- Coils -->
+            <g stroke="#f59e0b" stroke-width="4" fill="none">
+              <ellipse cx="90" cy="65" rx="10" ry="25"/>
+              <ellipse cx="125" cy="65" rx="10" ry="25"/>
+              <ellipse cx="160" cy="65" rx="10" ry="25"/>
+              <ellipse cx="195" cy="65" rx="10" ry="25"/>
+              <ellipse cx="230" cy="65" rx="10" ry="25"/>
+            </g>
+            <!-- Dense Internal Field Lines -->
+            <line x1="60" y1="55" x2="260" y2="55" stroke="#8b5cf6" stroke-width="2"/>
+            <line x1="60" y1="65" x2="260" y2="65" stroke="#8b5cf6" stroke-width="2.5"/>
+            <line x1="60" y1="75" x2="260" y2="75" stroke="#8b5cf6" stroke-width="2"/>
+            <text x="160" y="120" fill="#c084fc" font-size="9" font-weight="bold" text-anchor="middle">Solenoide: Campo magnético súper denso e intenso en el interior</text>
+          </svg>
+        `;
+      }
+    }
+
+    // --- SCREEN 3: EXPLAIN (5E - FASE 3) ---
+    function renderExplainScreen(container) {
+      container.innerHTML = `
+        <div class="card">
+          <span class="card-header-badge">FASE 3: EXPLICAR (EXPLAIN)</span>
+          <h1>3. Conservación y Transferencia de Energía</h1>
+          <p>Profundiza en cómo se manifiesta el principio de conservación de la energía en sistemas con campos de fuerza eléctricos y magnéticos.</p>
+
+          <!-- Flashcards Grid -->
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="flashcard">
+              <span class="flashcard-title">1. Principio de Conservación General</span>
+              <p style="font-size: 0.88rem;">La energía total en un sistema cerrado permanece constante. En dispositivos eléctricos y magnéticos, la energía cambia de forma (química $\\rightarrow$ campo $\\rightarrow$ cinética o térmica) sin destruirse jamás.</p>
+            </div>
+
+            <div class="flashcard">
+              <span class="flashcard-title">2. Energía en los Campos de Fuerza</span>
+              <p style="font-size: 0.88rem;">Un campo no es un truco geométrico: contiene energía física real. En un capacitor (campo eléctrico) o en una bobina (campo magnético), el trabajo realizado para separar cargas o mover corrientes se almacena directamente en la estructura del campo.</p>
+            </div>
+
+            <div class="flashcard">
+              <span class="flashcard-title">3. Cadena de Transferencia de Energía</span>
+              <div style="background: #172238; padding: 8px; border-radius: 8px; text-align: center; font-size: 0.82rem; font-family: monospace; color: #38bdf8; margin-top: 4px;">
+                FUENTE (Cargas / Batería) $\\rightarrow$ CAMPO (E o B) $\\rightarrow$ OBJETO DE PRUEBA (Fuerza / Movimiento)
+              </div>
+            </div>
+
+            <div class="flashcard">
+              <span class="flashcard-title">4. Relación entre Fuerza y Campo</span>
+              <p style="font-size: 0.88rem;">Diremos que existe un <strong>campo</strong> capaz de ejercer una fuerza sobre un objeto de prueba. Un objeto cargado o masivo colocado dentro del campo experimentará una fuerza y seguirá una trayectoria a lo largo de una línea de campo.</p>
+            </div>
+          </div>
+
+          <!-- Comparative Matrix: Electric vs Magnetic -->
+          <div style="background: #0b101d; padding: 14px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 10px;">
+            <span style="font-size: 0.82rem; font-weight: 800; color: var(--accent-purple); text-transform: uppercase;">📊 COMPARACIÓN: CAMPO ELÉCTRICO VS. CAMPO MAGNÉTICO</span>
+            
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem;">
+              <thead>
+                <tr style="border-bottom: 1px solid var(--border-color); color: var(--accent-cyan);">
+                  <th style="padding: 6px; text-align: left;">Característica</th>
+                  <th style="padding: 6px; text-align: left;">Campo Eléctrico</th>
+                  <th style="padding: 6px; text-align: left;">Campo Magnético</th>
+                </tr>
+              </thead>
+              <tbody style="color: var(--text-muted);">
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                  <td style="padding: 6px; font-weight: 700; color: #fff;">Fuentes</td>
+                  <td style="padding: 6px;">Cargas (+ y -)</td>
+                  <td style="padding: 6px;">Imanes y Corrientes</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                  <td style="padding: 6px; font-weight: 700; color: #fff;">Monopolos</td>
+                  <td style="padding: 6px;">Sí (cargas aisladas)</td>
+                  <td style="padding: 6px;">No (siempre dipolos N-S)</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                  <td style="padding: 6px; font-weight: 700; color: #fff;">Líneas de Campo</td>
+                  <td style="padding: 6px;">Parten de + y van a -</td>
+                  <td style="padding: 6px;">Salen de N y entran a S</td>
+                </tr>
+                <tr>
+                  <td style="padding: 6px; font-weight: 700; color: #fff;">Energía en Densidad</td>
+                  <td style="padding: 6px;">Mayor en capacitor</td>
+                  <td style="padding: 6px;">Mayor en solenoide</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- TEACHER PAUSE 2 -->
+          <div class="teacher-pause-card">
+            <div class="teacher-pause-title">
+              <span>🧑‍🏫 PAUSA CON TU PROFESOR</span>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-main);">
+              " Reflexión conceptual: ¿Cuál es la diferencia sutil pero profunda entre decir simplemente 'existe una fuerza' y decir 'existe un campo capaz de ejercer una fuerza sobre un objeto'?"
+            </p>
+            <button class="btn btn-amber" onclick="confirmTeacherPause(2)">
+              YA LO DISCUTIMOS — CONTINUAR
+            </button>
+          </div>
+
+          <button class="btn btn-primary" onclick="goToPhase(4, 'ELABORATE')">
+            CONTINUAR A LA FASE 4: ELABORAR ➡️
+          </button>
+        </div>
+      `;
+    }
+
+    // --- SCREEN 4: ELABORATE (5E - FASE 4) ---
+    function renderElaborateScreen(container) {
+      const mapState = state.elaborate.conceptMap;
+
+      container.innerHTML = `
+        <div class="card">
+          <span class="card-header-badge">FASE 4: ELABORAR (ELABORATE)</span>
+          <h1>4. Aplicación, Síntesis y Evolución de Modelos</h1>
+          <p>Pon a prueba tus conocimientos clasificando afirmaciones, completando el mapa conceptual y explorando la evolución científica de los modelos.</p>
+
+          <!-- Activity 1: "Detecta el Error" (Correct vs Needs Correction) -->
+          <div style="background: #0b101d; padding: 14px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 12px;">
+            <span style="font-size: 0.82rem; font-weight: 800; color: var(--accent-cyan); text-transform: uppercase;">⚠️ ACTIVIDAD 1: DETECTA EL ERROR DE CONCEPTUALIZACIÓN</span>
+            
+            ${renderErrorItem(0, "1. La energía desaparece del universo cuando un objeto se detiene por completo.", false)}
+            ${renderErrorItem(1, "2. Las líneas de campo representan la dirección e intensidad del campo y su densidad se vincula con la energía.", true)}
+            ${renderErrorItem(2, "3. Las líneas de campo son cables de cobre materiales que se pueden tocar.", false)}
+            ${renderErrorItem(3, "4. Dentro de un solenoide o un capacitor, la alta densidad de líneas refleja una mayor cantidad de energía almacenada.", true)}
+          </div>
+
+          <!-- Activity 2: Interactive Concept Map -->
+          <div style="background: #0b101d; padding: 14px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 12px;">
+            <span style="font-size: 0.82rem; font-weight: 800; color: var(--accent-purple); text-transform: uppercase;">🧩 ACTIVIDAD 2: MAPA CONCEPTUAL INTERACTIVO (Progresión 8)</span>
+            <p style="font-size: 0.85rem;">Toca cada espacio punteado para colocar el término conceptual correspondiente:</p>
+
+            <div class="map-nodes-grid">
+              <div class="map-node">
+                <span class="map-node-label">1. La ley de conservación establece que la energía:</span>
+                <div class="map-slot ${mapState.slots.slot1 ? 'filled' : ''}" onclick="triggerMapSlot('slot1')">
+                  ${mapState.slots.slot1 || 'Toca para seleccionar'}
+                </div>
+              </div>
+
+              <div class="map-node">
+                <span class="map-node-label">2. La región con mayor número de líneas por área tiene mayor:</span>
+                <div class="map-slot ${mapState.slots.slot2 ? 'filled' : ''}" onclick="triggerMapSlot('slot2')">
+                  ${mapState.slots.slot2 || 'Toca para seleccionar'}
+                </div>
+              </div>
+
+              <div class="map-node">
+                <span class="map-node-label">3. Un capacitor almacena energía en su campo:</span>
+                <div class="map-slot ${mapState.slots.slot3 ? 'filled' : ''}" onclick="triggerMapSlot('slot3')">
+                  ${mapState.slots.slot3 || 'Toca para seleccionar'}
+                </div>
+              </div>
+
+              <div class="map-node">
+                <span class="map-node-label">4. Un solenoide concentra energía en su campo:</span>
+                <div class="map-slot ${mapState.slots.slot4 ? 'filled' : ''}" onclick="triggerMapSlot('slot4')">
+                  ${mapState.slots.slot4 || 'Toca para seleccionar'}
+                </div>
+              </div>
+            </div>
+
+            <button class="btn btn-secondary" onclick="checkConceptMap()" style="margin-top: 4px;">
+              ✅ COMPROBAR RESPUESTAS DEL MAPA
+            </button>
+            ${mapState.checked ? `<div class="feedback-box feedback-correct">✅ ¡Excelente síntesis conceptual de la Progresión 8!</div>` : ''}
+          </div>
+
+          <!-- Section: Extension - Evolution of Scientific Models (Gravity Probe B) -->
+          <div style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(139, 92, 246, 0.1)); border: 1.5px solid var(--accent-cyan); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+            <span style="font-size: 0.82rem; font-weight: 800; color: var(--accent-cyan); text-transform: uppercase;">🌌 UN PASO MÁS: CUANDO LOS MODELOS CIENTÍFICOS EVOLUCIONAN</span>
+            <p style="font-size: 0.88rem;">
+              En 1915, Albert Einstein llevó la idea de los campos a un nuevo nivel: propuso que la masa y la energía de la Tierra deforman y curvan el <strong>espacio-tiempo</strong> a su alrededor.
+            </p>
+
+            <!-- Spacetime Curvature Graphic SVG -->
+            <div style="background: #060911; border-radius: 10px; padding: 10px; text-align: center;">
+              <svg viewBox="0 0 320 120" style="width: 100%; max-height: 110px;">
+                <!-- Mesh grid curvature -->
+                <path d="M 20 60 Q 160 110 300 60" fill="none" stroke="#475569" stroke-width="1.5"/>
+                <path d="M 20 40 Q 160 90 300 40" fill="none" stroke="#475569" stroke-width="1.5"/>
+                <path d="M 20 80 Q 160 130 300 80" fill="none" stroke="#475569" stroke-width="1.5"/>
+                <!-- Earth Sphere -->
+                <circle cx="160" cy="55" r="24" fill="#0284c7" stroke="#38bdf8" stroke-width="2"/>
+                <!-- Satellite Probe -->
+                <rect x="230" y="30" width="16" height="10" fill="#f59e0b" rx="2"/>
+                <line x1="238" y1="35" x2="160" y2="55" stroke="#06b6d4" stroke-width="1" stroke-dasharray="3,3"/>
+                <text x="160" y="112" fill="#94a3b8" font-size="9" text-anchor="middle">Sonda Gravity Probe B verificando la curvatura y torsión espacial</text>
+              </svg>
+            </div>
+
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+              Para comprobar esta minúscula predicción, la NASA envió la sonda <strong>Gravity Probe B</strong> con los giroscopios más esféricos construidos por el ser humano. El experimento demostró cómo la ciencia avanza: <strong>MODELO $\\rightarrow$ PREDICCIÓN $\\rightarrow$ EXPERIMENTO $\\rightarrow$ EVIDENCIA EMPÍRICA</strong>.
+            </p>
+          </div>
+
+          <!-- TEACHER PAUSE 3 -->
+          <div class="teacher-pause-card">
+            <div class="teacher-pause-title">
+              <span>🧑‍🏫 PAUSA FINAL CON TU PROFESOR</span>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-main);">
+              "¿Qué diferencia existe entre simplemente proponer una idea teórica y realizar un experimento ultra-preciso para obtener evidencia del comportamiento de los campos?"
+            </p>
+            <button class="btn btn-amber" onclick="confirmTeacherPause(3)">
+              ESTOY LISTO PARA LA EVALUACIÓN FINAL
+            </button>
+          </div>
+
+          <button class="btn btn-primary" onclick="goToPhase(5, 'EVALUATE')">
+            CONTINUAR A LA FASE 5: EVALUAR 🏁
+          </button>
+        </div>
+      `;
+    }
+
+    function renderErrorItem(idx, statement, isCorrect) {
+      const userChoice = state.elaborate.errorDetection[idx];
+      return `
+        <div style="background: #172238; padding: 10px 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 8px;">
+          <p style="font-size: 0.88rem; font-weight: 600; color: #fff;">${statement}</p>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-secondary ${userChoice === true ? 'selected' : ''}" style="flex: 1; padding: 6px; font-size: 0.82rem;" onclick="setErrorItem(${idx}, true)">CORRECTA</button>
+            <button class="btn btn-secondary ${userChoice === false ? 'selected' : ''}" style="flex: 1; padding: 6px; font-size: 0.82rem;" onclick="setErrorItem(${idx}, false)">NECESITA CORRECCIÓN</button>
+          </div>
+          ${userChoice !== null ? `
+            <div class="feedback-box ${userChoice === isCorrect ? 'feedback-correct' : 'feedback-incorrect'}" style="padding: 6px 10px; font-size: 0.8rem;">
+              ${userChoice === isCorrect ? '✅ Evaluado correctamente.' : '❌ Revisa el concepto del principio de conservación.'}
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    function setErrorItem(idx, val) {
+      state.elaborate.errorDetection[idx] = val;
+      saveState();
+      renderApp();
+    }
+
+    function triggerMapSlot(slotKey) {
+      const options = [
+        "No se crea ni se destruye",
+        "Densidad de líneas de campo",
+        "Eléctrico",
+        "Magnético"
+      ];
+      
+      const current = state.elaborate.conceptMap.slots[slotKey];
+      let nextIdx = 0;
+      if (current) {
+        const idx = options.indexOf(current);
+        nextIdx = (idx + 1) % options.length;
+      }
+      state.elaborate.conceptMap.slots[slotKey] = options[nextIdx];
+      saveState();
+      renderApp();
+    }
+
+    function checkConceptMap() {
+      state.elaborate.conceptMap.checked = true;
+      saveState();
+      renderApp();
+    }
+
+    // --- SCREEN 5: EVALUATE (5E - FASE 5) ---
+    function renderEvaluateScreen(container) {
+      const quiz = state.evaluate;
+      const currentIdx = quiz.currentQ;
+      const q = QUIZ_BANK[currentIdx];
+
+      container.innerHTML = `
+        <div class="card">
+          <span class="card-header-badge">FASE 5: EVALUACIÓN FORMATIVA (EVALUATE)</span>
+          <h1>5. Cuestionario de Evaluación Final</h1>
+          <p>Responde los 10 reactivos conceptuales de la Progresión 8. Puedes navegar entre las preguntas antes de entregar.</p>
+
+          <!-- 10 Question Navigator Grid -->
+          <div class="quiz-nav-grid">
+            ${QUIZ_BANK.map((item, idx) => {
+              let cls = "quiz-nav-btn";
+              if (idx === currentIdx) cls += " active";
+              if (quiz.answers[idx] !== null) cls += " answered";
+              return `<button class="${cls}" onclick="navQuizTo(${idx})">${idx + 1}</button>`;
+            }).join('')}
+          </div>
+
+          <!-- Question Body -->
+          <div style="background: #0b101d; padding: 16px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 0.8rem; font-weight: 800; color: var(--accent-cyan);">PREGUNTA ${currentIdx + 1} DE 10</span>
+              <span style="font-size: 0.78rem; color: var(--text-muted);">${q.topic.toUpperCase()}</span>
+            </div>
+
+            <p style="font-weight: 700; color: var(--text-main); font-size: 1rem; line-height: 1.4;">
+              ${q.question}
+            </p>
+
+            <div class="options-stack">
+              ${q.options.map((opt, i) => {
+                const isSelected = quiz.answers[currentIdx] === i;
+                const letters = ["A", "B", "C", "D"];
+                return `
+                  <button class="option-btn ${isSelected ? 'selected' : ''}" onclick="selectQuizAnswer(${i})">
+                    <span class="option-letter">${letters[i]}</span>
+                    <span>${opt}</span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>
+
+          <!-- Nav Controls -->
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-secondary" style="flex: 1;" ${currentIdx === 0 ? 'disabled' : ''} onclick="navQuizTo(${currentIdx - 1})">
+              ⬅️ ANTERIOR
+            </button>
+            <button class="btn btn-secondary" style="flex: 1;" ${currentIdx === 9 ? 'disabled' : ''} onclick="navQuizTo(${currentIdx + 1})">
+              SIGUIENTE ➡️
+            </button>
+          </div>
+
+          <!-- Submit Button -->
+          <div style="margin-top: 8px;">
+            ${renderSubmitQuizButton()}
+          </div>
+        </div>
+      `;
+    }
+
+    function navQuizTo(idx) {
+      state.evaluate.currentQ = idx;
+      saveState();
+      renderApp();
+    }
+
+    function selectQuizAnswer(optIdx) {
+      state.evaluate.answers[state.evaluate.currentQ] = optIdx;
+      saveState();
+      renderApp();
+    }
+
+    function renderSubmitQuizButton() {
+      const answeredCount = state.evaluate.answers.filter(a => a !== null).length;
+      if (answeredCount < 10) {
+        return `
+          <div style="text-align: center; font-size: 0.85rem; color: var(--accent-amber); margin-bottom: 6px;">
+            ⚠️ Has respondido ${answeredCount} de 10 preguntas. Completa todas para finalizar.
+          </div>
+          <button class="btn btn-disabled">🏁 FINALIZAR EVALUACIÓN</button>
+        `;
+      }
+      return `
+        <button class="btn btn-primary" onclick="submitQuiz()">
+          🏁 FINALIZAR Y GENERAR EVIDENCIA OFICIAL
+        </button>
+      `;
+    }
+
+    function submitQuiz() {
+      state.evaluate.submitted = true;
+      state.screen = 'EVIDENCE';
+      saveState();
+      renderApp();
+    }
+
+    // --- SCREEN 6: EVIDENCE & RESULTS SCREEN ---
+    function renderEvidenceScreen(container) {
+      // Calculate Score
+      let correct = 0;
+      QUIZ_BANK.forEach((q, idx) => {
+        if (state.evaluate.answers[idx] === q.correct) correct++;
+      });
+      const pct = Math.round((correct / 10) * 100);
+
+      // Performance Badge
+      let perfText = "";
+      let perfClass = "";
+      if (pct >= 90) { perfText = "EXCELENTE"; perfClass = "badge-exc"; }
+      else if (pct >= 80) { perfText = "MUY BUEN DOMINIO"; perfClass = "badge-good"; }
+      else if (pct >= 70) { perfText = "BUEN DOMINIO"; perfClass = "badge-good"; }
+      else if (pct >= 60) { perfText = "EN PROCESO"; perfClass = "badge-proc"; }
+      else { perfText = "REQUIERE REFORZAMIENTO"; perfClass = "badge-reinf"; }
+
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('es-MX', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      const timeStr = now.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+
+      container.innerHTML = `
+        <div class="evidence-card">
+          <span class="card-header-badge" style="align-self: center;">✅ PROGRESIÓN 8 COMPLETADA</span>
+          <h2 style="color: #fff; font-size: 1.1rem; margin-bottom: 2px;">LA ENERGÍA EN LOS PROCESOS DE LA VIDA DIARIA</h2>
+          <p style="color: var(--accent-cyan); font-weight: 700; font-size: 0.85rem;">PROGRESIÓN 8: CONSERVACIÓN Y TRANSFERENCIA DE ENERGÍA</p>
+
+          <div style="background-color: #0b101d; border-radius: 12px; padding: 12px;">
+            <div style="font-size: 1.15rem; font-weight: 800; color: var(--text-main);">${state.user.name}</div>
+            <div style="font-size: 0.9rem; font-weight: 700; color: var(--accent-cyan);">GRUPO: ${state.user.group}</div>
+          </div>
+
+          <div class="score-large">${pct}%</div>
+          <div style="font-weight: 800; font-size: 1.1rem; color: var(--text-main);">
+            RESULTADO: ${correct} / 10 ACIERTOS
+          </div>
+
+          <div class="badge-perf ${perfClass}">
+            ${perfText}
+          </div>
+
+          <table class="summary-table">
+            <tr><td>Estudiante:</td><td>${state.user.name}</td></tr>
+            <tr><td>Grupo:</td><td>${state.user.group}</td></tr>
+            <tr><td>Reactivos Correctos:</td><td>${correct} de 10</td></tr>
+            <tr><td>Porcentaje Obtenido:</td><td>${pct}%</td></tr>
+            <tr><td>Fecha y Hora:</td><td>${dateStr} - ${timeStr}</td></tr>
+            <tr><td>Estatus de Sesión:</td><td>✅ EVALUACIÓN ENTREGADA</td></tr>
+          </table>
+
+          <!-- Metacognitive Reflection Box -->
+          <div style="background-color: #0b101d; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; text-align: left;">
+            <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-cyan); text-transform: uppercase;">🧠 Mi Reflexión Escrita:</label>
+            <p style="font-size: 0.85rem; margin-top: 4px; color: var(--text-muted);">En tus propias palabras: ¿Qué significa decir que la energía puede transferirse entre objetos, campos o sistemas sin crearse ni destruirse?</p>
+            <textarea id="reflection-text" class="input-control" rows="3" style="margin-top: 6px; font-size: 0.88rem;" placeholder="Escribe aquí tu explicación para el profesor..." onchange="saveReflection(this.value)">${state.evaluate.reflection}</textarea>
+          </div>
+
+          <div class="camera-notice">
+            📸 TOMA UNA CAPTURA DE ESTA PANTALLA Y ENVÍALA A TU PROFESOR COMO EVIDENCIA.
+          </div>
+
+          <!-- Review Answers Collapsible -->
+          <div style="margin-top: 8px;">
+            <button class="btn btn-secondary" onclick="toggleAnswerReview()">
+              🔍 REVISAR RETROALIMENTACIÓN DE LAS 10 PREGUNTAS
+            </button>
+            <div id="answers-review-box" style="display: none; flex-direction: column; gap: 10px; margin-top: 12px; text-align: left;">
+              ${QUIZ_BANK.map((q, idx) => {
+                const userAns = state.evaluate.answers[idx];
+                const isCorr = userAns === q.correct;
+                return `
+                  <div style="background: #0b101d; border: 1px solid ${isCorr ? 'var(--success)' : 'var(--danger)'}; border-radius: 10px; padding: 10px; font-size: 0.85rem;">
+                    <div style="font-weight: 700; color: #fff;">${idx + 1}. ${q.question}</div>
+                    <div style="color: ${isCorr ? '#6ee7b7' : '#fca5a5'}; margin-top: 4px;">
+                      Tu respuesta: ${q.options[userAns]} ${isCorr ? '✅' : '❌'}
+                    </div>
+                    ${!isCorr ? `<div style="color: #38bdf8; font-weight: 600;">Respuesta correcta: ${q.options[q.correct]}</div>` : ''}
+                    <div style="color: var(--text-muted); margin-top: 4px; font-size: 0.8rem;"><strong>Explicación:</strong> ${q.explanation}</div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+
+          <button class="btn btn-secondary" style="margin-top: 12px;" onclick="resetQuizSession()">
+            🔄 Reiniciar sesión para otro estudiante
+          </button>
+        </div>
+      `;
+    }
+
+    function saveReflection(val) {
+      state.evaluate.reflection = val;
+      saveState();
+    }
+
+    function toggleAnswerReview() {
+      const box = document.getElementById('answers-review-box');
+      if (box) {
+        box.style.display = box.style.display === 'none' ? 'flex' : 'none';
+      }
+    }
+
+    function resetQuizSession() {
+      if (confirm("¿Deseas reiniciar la aplicación para otro estudiante?")) {
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch(e) {}
+        state.user = { name: '', group: '' };
+        state.phase = 0;
+        state.screen = 'START';
+        state.evaluate.answers = new Array(10).fill(null);
+        state.evaluate.submitted = false;
+        renderApp();
+      }
+    }
+
+    // General Navigation Helper
+    function goToPhase(phaseNum, screenName) {
+      state.phase = phaseNum;
+      state.screen = screenName;
+      saveState();
+      renderApp();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // --- INITIALIZATION ON WINDOW LOAD ---
+    window.onload = function() {
+      loadState();
+      renderApp();
+    };
+  </script>
+</body>
+</html>
